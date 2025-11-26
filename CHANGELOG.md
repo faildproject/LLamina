@@ -5,6 +5,7 @@ Das Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1
 und das Projekt nutzt [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- Konfiguration via config.yaml
 
 ## [0.1.0] – 2025-11-25
 Initialer stabiler Release des Proxys.

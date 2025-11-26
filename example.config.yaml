@@ -1,0 +1,32 @@
+servers:
+  - name: lmstudio_local
+    host: http://127.0.0.1
+    port: 1234
+    meta:
+      type: lmstudio
+      gpu: "RTX 4090"
+      vram_gb: 24
+      cpu: "Ryzen 7950X"
+      ram_gb: 64
+      tags:
+        - local
+        - workstation
+      notes: "Dev-System unterm Tisch"
+
+  - name: proxmox_node_1
+    host: 10.0.20.5
+    port: 8000
+    meta:
+      type: openai-compatible
+      gpu: "T4"
+      vram_gb: 16
+      cpu: "Xeon Silver"
+      ram_gb: 128
+      tags:
+        - proxmox
+        - shared
+      notes: "Node im Labor"
+
+defaults:
+  timeout_seconds: 30
+  max_retries: 2

@@ -7,6 +7,11 @@ import httpx
 from fastapi import HTTPException, Request
 from fastapi.responses import Response
 
+from .config import load_config
+
+configuration = load_config()
+servers = configuration.servers
+
 
 EXCLUDED_HEADERS = {"content-length", "transfer-encoding", "connection"}
 
@@ -23,7 +28,6 @@ def get_client_id(request: Request):
 
 async def proxy_to_backend(
     request: Request,
-    backend_base_url: str,
 ) -> Response:
     """
     Leitet den Request 1:1 zum LM Studio Backend weiter
@@ -40,7 +44,7 @@ async def proxy_to_backend(
     if request.url.query:
         path_and_query += f"?{request.url.query}"
 
-    base = backend_base_url.rstrip("/")
+    base = servers[0].host + ":" + str(servers[0].port)
     target_url = f"{base}{path_and_query}"
 
     # Body & Headers übernehmen

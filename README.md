@@ -46,12 +46,31 @@ source .venv/bin/activate
 
 ------------------------------------------------------------------------
 
-## ⚙️ .env Datei
+## ⚙️ Server-Konfiguration (`config.yaml`)
 
-Erstelle eine Datei `.env` im Projektordner:
+Lege im Projektordner eine Datei **`config.yaml`** an:
 
-``` env
-BACKEND_URL=http://localhost:1234
+`siehe root/example.config.yaml`
+
+```yaml
+servers:
+  - name: Workstation1
+    host: http://192.168.178.21
+    port: 1234
+    meta:
+      type: lmstudio
+      notes: "Lokales LM Studio Backend"
+  
+  - name: Workstation2
+    host: http://192.168.178.22
+    port: 5678
+    meta:
+      type: lmstudio
+      notes: "Lokales LM Studio Backend"
+
+defaults:
+  timeout_seconds: 30
+  max_retries: 2
 ```
 
 > LM Studio muss laufen (`lms server start`).
