@@ -6,6 +6,7 @@ from typing import Optional, List, Dict
 
 class Server(BaseModel):
     name: str
+    tool: str
     host: str
     port: int
     meta: Dict = {}

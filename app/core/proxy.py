@@ -8,9 +8,11 @@ from fastapi import HTTPException, Request
 from fastapi.responses import Response
 
 from .config import load_config
+from ..api.model_switcher import load_model_if_needed
 
 configuration = load_config()
 servers = configuration.servers
+server = servers[1]
 
 
 EXCLUDED_HEADERS = {"content-length", "transfer-encoding", "connection"}
@@ -44,13 +46,29 @@ async def proxy_to_backend(
     if request.url.query:
         path_and_query += f"?{request.url.query}"
 
-    base = servers[0].host + ":" + str(servers[0].port)
+    base = server.host + ":" + str(server.port)
     target_url = f"{base}{path_and_query}"
+    print(f"Request to: {target_url}")
 
     # Body & Headers übernehmen
     body = await request.body()
     headers = dict(request.headers)
     headers.pop("host", None)
+
+    try:
+        request_json = await request.json()
+    except Exception:
+        request_json = {}
+
+    model_name = request_json.get("model")
+    if model_name:
+        print(f"[Proxy] Requested model: {model_name}")
+        success = load_model_if_needed(model_name, server.tool)
+        if not success:
+            raise HTTPException(
+                status_code=500,
+                detail=f"Failed to load model via control API: {model_name}",
+            )
 
     async with httpx.AsyncClient(timeout=None) as client:
         try:
